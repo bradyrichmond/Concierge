@@ -1,16 +1,22 @@
 import { create } from 'zustand'
 import { LocalConfig } from '../types'
-import { AuthUser } from 'aws-amplify/auth'
+import { useUserStore } from './UserStore'
 
-interface UseBaseStoreType {
-    currentUser?: AuthUser
+interface BaseStore {
+    doInitialLoad(): Promise<void>
+    isLoaded: boolean
     localConfig?: LocalConfig
     setLocalConfig(config: LocalConfig): void
     updateLocalConfig(): void
 }
 
-export const useStore = create<UseBaseStoreType>((set) => ({
-    currentUser: undefined,
+export const useBaseStore = create<BaseStore>((set, get) => ({
+    doInitialLoad: async () => {
+        get().updateLocalConfig()
+        await useUserStore.getState().updateUserData()
+        set({ isLoaded: true })
+    },
+    isLoaded: false,
     localConfig: undefined,
     setLocalConfig: (config: LocalConfig) => {
         localStorage.setItem('ConciergeConfig', JSON.stringify(config))
@@ -21,7 +27,7 @@ export const useStore = create<UseBaseStoreType>((set) => ({
         if (config) {
             set({ localConfig: JSON.parse(config) })
         } else {
-            throw 'Application is not configured'
+            console.error('Application is not configured')
         }
     }
 }))
