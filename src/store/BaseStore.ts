@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { LocalConfig } from '../types'
 import { useUserStore } from './UserStore'
+import { useOrgStore } from './OrgStore'
 
 interface BaseStore {
     doInitialLoad(): Promise<void>
@@ -14,6 +15,7 @@ export const useBaseStore = create<BaseStore>((set, get) => ({
     doInitialLoad: async () => {
         get().updateLocalConfig()
         await useUserStore.getState().updateUserData()
+        await useOrgStore.getState().updateOrgData()
         set({ isLoaded: true })
     },
     isLoaded: false,

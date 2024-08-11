@@ -34,13 +34,14 @@ const schema = a.schema({
     .model({
       admin: a.id().required(),
       allowConsignorReadAccess: a.id().array(),
-      consignors: a.hasMany('Consignor', 'orgId')
-        .authorization((allow) => [allow.ownersDefinedIn('allowConsignorReadAccess').to(['read'])]),
+      consignors: a.hasMany('Consignor', 'orgId'),
+      name: a.string().required(),
       stores: a.hasMany('Store', 'orgId'),
       users: a.hasMany('User', 'orgId')
     })
     .authorization((allow) => [
-      allow.ownerDefinedIn('admin')
+      allow.ownerDefinedIn('admin'),
+      allow.authenticated().to(['read'])
     ]),
   Store: a
     .model({
@@ -60,7 +61,8 @@ const schema = a.schema({
     })
     .authorization((allow) => [
       allow.ownersDefinedIn('allowAccessTo').to(['read', 'update']),
-      allow.ownerDefinedIn('orgOwner')
+      allow.ownerDefinedIn('orgOwner'),
+      allow.owner()
     ])
 })
 
@@ -84,9 +86,9 @@ cases: https://docs.amplify.aws/gen2/build-a-backend/data/connect-to-API/
 =========================================================================*/
 
 /*
-"use client"
-import { generateClient } from "aws-amplify/data";
-import type { Schema } from "@/amplify/data/resource";
+'use client'
+import { generateClient } from 'aws-amplify/data';
+import type { Schema } from '@/amplify/data/resource';
 
 const client = generateClient<Schema>() // use this Data client for CRUDL requests
 */

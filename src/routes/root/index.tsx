@@ -13,11 +13,11 @@ const Root = () => {
     useEffect(() => {
         console.log(`check local data etc: isLoaded: ${isLoaded}, user: ${JSON.stringify(currentUser)}, config: ${JSON.stringify(localConfig)}`)
         if (isLoaded && !currentUser && localConfig) {
-            navigate('/LoadedNoUser')
+            navigate('/loaded-no-user')
         }
 
         if (isLoaded && !currentUser && !localConfig) {
-            navigate('/LoadedNoConfig')
+            navigate('/loaded-no-config')
         }
     }, [currentUser, isLoaded, localConfig, navigate])
 

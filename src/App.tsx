@@ -7,6 +7,11 @@ import { useEffect } from 'react'
 import { LoadedNoUser } from './routes/root/LoadedNoUser'
 import { LoadedNoConfig } from './routes/root/LoadedNoConfig'
 import { useUserStore } from './store/UserStore'
+import { Login } from './routes/auth/Login'
+import { SignUp } from './routes/auth/SignUp'
+import { VerifyAccount } from './routes/auth/VerifyAccount'
+import { CreateOrganization } from './routes/auth/CreateOrganization'
+import { Employee } from './routes/employee'
 
 const router = createBrowserRouter([
   {
@@ -14,12 +19,32 @@ const router = createBrowserRouter([
     element: <Root />,
     children: [
       {
-        path: '/LoadedNoUser',
+        path: '/create-organization',
+        element: <CreateOrganization />
+      },
+      {
+        path: '/employee',
+        element: <Employee />
+      },
+      {
+        path: '/loaded-no-config',
+        element: <LoadedNoConfig />
+      },
+      {
+        path: '/loaded-no-user',
         element: <LoadedNoUser />
       },
       {
-        path: '/LoadedNoConfig',
-        element: <LoadedNoConfig />
+        path: '/login',
+        element: <Login />
+      },
+      {
+        path: '/sign-up',
+        element: <SignUp />
+      },
+      {
+        path: '/verify-account',
+        element: <VerifyAccount />
       }
     ]
   }
