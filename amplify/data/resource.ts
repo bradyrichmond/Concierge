@@ -1,55 +1,75 @@
 import { type ClientSchema, a, defineData } from '@aws-amplify/backend'
 
 const schema = a.schema({
-  // ENUMS
-  DropOffType: a.enum(['APPOINTMENT', 'SIX_ITEM']),
-
   // MODELS
-  Consignor: a
+  Client: a
     .model({
       allowAccessTo: a.id().required().array(),
-      dropoffs: a.hasMany('DropOff', 'consignorId'),
+      contacts: a.hasMany('Contact', 'clientId'),
       firstName: a.string().required(),
       lastName: a.string().required(),
       organization: a.belongsTo('Organization', 'orgId'),
       orgId: a.id().required(),
-      phoneNumber: a.phone().required()
+      phone: a.phone().required()
     })
     .authorization((allow) => [
       allow.guest().to(['create']),
-      allow.ownersDefinedIn('allowAccessTo').to(['read', 'update'])
-    ]),
-  DropOff: a
+      allow.ownersDefinedIn('allowAccessTo').to(['read', 'update']),
+      allow.authenticated().to(['create', 'read'])
+    ])
+    .secondaryIndexes((index) => [index('phone'), index('orgId')]),
+  Contact: a
     .model({
       allowAccessTo: a.id().array().required(),
-      consignor: a.belongsTo('Consignor', 'consignorId'),
-      consignorId: a.id().required(),
-      type: a.ref('DropOffType')
+      client: a.belongsTo('Client', 'clientId'),
+      clientId: a.id().required(),
+      isWaiting: a.boolean(),
+      location: a.belongsTo('Location', 'locationId'),
+      locationId: a.id().required(),
+      organization: a.belongsTo('Organization', 'orgId'),
+      orgId: a.id().required(),
+      typeId: a.id().required(),
+      oversizedItems: a.boolean(),
+      oversizedItemsDescription: a.string()
     })
     .authorization((allow) => [
       allow.guest().to(['create']),
+      allow.authenticated().to(['create', 'read']),
       allow.ownersDefinedIn('allowAccessTo').to(['read', 'update'])
     ]),
+  ContactType: a
+    .model({
+      allowAccessTo: a.id().array().required(),
+      label: a.string().required(),
+      organization: a.belongsTo('Organization', 'orgId'),
+      orgId: a.id().required()
+    })
+    .authorization((allow) => [allow.authenticated()]),
   Organization: a
     .model({
       admin: a.id().required(),
-      allowConsignorReadAccess: a.id().array(),
-      consignors: a.hasMany('Consignor', 'orgId'),
+      allowClientReadAccess: a.id().array(),
+      contacts: a.hasMany('Contact', 'orgId'),
+      contactType: a.hasMany('ContactType', 'orgId'),
+      clients: a.hasMany('Client', 'orgId'),
       name: a.string().required(),
-      stores: a.hasMany('Store', 'orgId'),
+      stores: a.hasMany('Location', 'orgId'),
       users: a.hasMany('User', 'orgId')
     })
     .authorization((allow) => [
       allow.ownerDefinedIn('admin'),
       allow.authenticated().to(['read'])
     ]),
-  Store: a
+  Location: a
     .model({
       allowAccessTo: a.id().array().required(),
+      contacts: a.hasMany('Contact', 'locationId'),
+      name: a.string().required(),
       organization: a.belongsTo('Organization', 'orgId'),
       orgId: a.id().required()
     })
     .authorization((allow) => [
+      allow.authenticated().to(['create']),
       allow.ownersDefinedIn('allowAccessTo').to(['read', 'update'])
     ]),
   User: a
@@ -74,32 +94,3 @@ export const data = defineData({
     defaultAuthorizationMode: 'userPool',
   },
 })
-
-/*== STEP 2 ===============================================================
-Go to your frontend source code. From your client-side code, generate a
-Data client to make CRUDL requests to your table. (THIS SNIPPET WILL ONLY
-WORK IN THE FRONTEND CODE FILE.)
-
-Using JavaScript or Next.js React Server Components, Middleware, Server 
-Actions or Pages Router? Review how to generate Data clients for those use
-cases: https://docs.amplify.aws/gen2/build-a-backend/data/connect-to-API/
-=========================================================================*/
-
-/*
-'use client'
-import { generateClient } from 'aws-amplify/data';
-import type { Schema } from '@/amplify/data/resource';
-
-const client = generateClient<Schema>() // use this Data client for CRUDL requests
-*/
-
-/*== STEP 3 ===============================================================
-Fetch records from the database and use them in your frontend component.
-(THIS SNIPPET WILL ONLY WORK IN THE FRONTEND CODE FILE.)
-=========================================================================*/
-
-/* For example, in a React component, you can use this snippet in your
-  function's RETURN statement */
-// const { data: todos } = await client.models.Todo.list()
-
-// return <ul>{todos.map(todo => <li key={todo.id}>{todo.content}</li>)}</ul>

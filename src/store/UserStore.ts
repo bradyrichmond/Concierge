@@ -1,17 +1,18 @@
 import { create } from 'zustand'
-import { AuthUser, getCurrentUser } from 'aws-amplify/auth'
-import { CreateUserType } from '../types'
+import { getCurrentUser } from 'aws-amplify/auth'
+import { CreateUserType, UserType } from '../types'
 import { useApiStore } from './ApiStore'
 
 interface UserStore {
     createUser(user: CreateUserType): Promise<void>
-    currentUser?: AuthUser
+    currentUser?: UserType
     updateUserData(): Promise<void>
 }
 
 export const useUserStore = create<UserStore>((set) => ({
     createUser: async (user: CreateUserType) => {
         const client = await useApiStore.getState().getClient()
+
         try {
             await client.models.User.create(user)
         } catch {
@@ -20,11 +21,16 @@ export const useUserStore = create<UserStore>((set) => ({
     },
     currentUser: undefined,
     updateUserData: async () => {
+        const client = await useApiStore.getState().getClient()
+
         try {
-            const currentUser = await getCurrentUser()
-            if (currentUser) {
-                set({ currentUser })
-                return
+            const awsUser = await getCurrentUser()
+            if (awsUser) {
+                const { data: currentUser } = await client.models.User.get({ id: awsUser.userId })
+                if (currentUser) {
+                    set({ currentUser })
+                    return
+                }
             }
 
             throw ''

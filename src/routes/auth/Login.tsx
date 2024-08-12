@@ -34,13 +34,13 @@ export const Login = () => {
     return (
         <Box sx={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
             <Box sx={{ width: '50%' }}>
-                <Typography variant='h2' sx={{ marginBottom: '2rem' }}>Log In</Typography>
+                <Typography variant='h2' sx={{ marginBottom: 4 }}>Log In</Typography>
                 <form onSubmit={handleLogIn}>
                     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                        <TextField label='Email' value={email} onChange={handleEmailChange} sx={{ marginBottom: '1rem' }} />
+                        <TextField label='Email' value={email} onChange={handleEmailChange} sx={{ marginBottom: 2 }} />
                         <TextField label='Password' type='password' value={password} onChange={handlePasswordChange} />
                     </Box>
-                    <Button variant='contained' disabled={isLogginIn} onClick={handleLogIn} sx={{ marginTop: '2rem' }}>Log In</Button>
+                    <Button variant='contained' disabled={isLogginIn} onClick={handleLogIn} sx={{ marginTop: 4 }}>Log In</Button>
                 </form>
             </Box>
         </Box>

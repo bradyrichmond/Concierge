@@ -12,6 +12,13 @@ import { SignUp } from './routes/auth/SignUp'
 import { VerifyAccount } from './routes/auth/VerifyAccount'
 import { CreateOrganization } from './routes/auth/CreateOrganization'
 import { Employee } from './routes/employee'
+import { Settings } from './routes/settings'
+import { Client } from './routes/client'
+import { ClientData } from './routes/client/ClientData'
+import { ContactType } from './routes/client/ContactType'
+import { ConfirmContactCreated } from './routes/client/ConfirmContactCreated'
+import { CreateLocation } from './routes/auth/CreateLocation'
+import { WaitingContacts } from './routes/employee/WaitingContacts'
 
 const router = createBrowserRouter([
   {
@@ -19,12 +26,40 @@ const router = createBrowserRouter([
     element: <Root />,
     children: [
       {
+        path: '/client',
+        element: <Client />,
+        children: [
+          {
+            path: '/client/client-data',
+            element: <ClientData />
+          },
+          {
+            path: '/client/contact-type',
+            element: <ContactType />
+          },
+          {
+            path: '/client/contact-created',
+            element: <ConfirmContactCreated />
+          },
+        ]
+      },
+      {
+        path: '/create-location',
+        element: <CreateLocation />
+      },
+      {
         path: '/create-organization',
         element: <CreateOrganization />
       },
       {
         path: '/employee',
-        element: <Employee />
+        element: <Employee />,
+        children: [
+          {
+            path: '/employee/waiting-contacts',
+            element: <WaitingContacts />
+          }
+        ]
       },
       {
         path: '/loaded-no-config',
@@ -37,6 +72,10 @@ const router = createBrowserRouter([
       {
         path: '/login',
         element: <Login />
+      },
+      {
+        path: '/settings',
+        element: <Settings />
       },
       {
         path: '/sign-up',
@@ -59,7 +98,7 @@ function App() {
     doInitialLoad()
   }, [doInitialLoad])
 
-  // Don't want to show nav to consignors
+  // Don't want to show nav to clients
   const hideAppBar = !currentUser
 
   return (
@@ -78,8 +117,8 @@ function App() {
           {!isLoaded &&
             <Box sx={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
               <Typography variant='h2'>Loading...</Typography>
-              <Box sx={{ height: '1rem', width: '100%', paddingTop: '2rem' }}>
-                <LinearProgress sx={{ marginLeft: '2rem', marginRight: '2rem', height: '1rem', borderRadius: '1rem' }} />
+              <Box sx={{ height: 2, width: '100%', paddingTop: 4 }}>
+                <LinearProgress sx={{ marginLeft: 4, marginRight: 4, height: 2, borderRadius: 2 }} />
               </Box>
             </Box>
           }

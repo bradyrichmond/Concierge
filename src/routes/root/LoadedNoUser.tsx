@@ -11,7 +11,7 @@ export const LoadedNoUser = () => {
     return (
         <Box sx={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
             <Box>
-                <Button>Load Consignor View</Button>
+                <Button>Load Client View</Button>
             </Box>
             <Box>
                 <Button onClick={goToLogin}>Login</Button>

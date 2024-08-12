@@ -14,9 +14,14 @@ interface BaseStore {
 export const useBaseStore = create<BaseStore>((set, get) => ({
     doInitialLoad: async () => {
         get().updateLocalConfig()
-        await useUserStore.getState().updateUserData()
-        await useOrgStore.getState().updateOrgData()
-        set({ isLoaded: true })
+        try {
+            await useUserStore.getState().updateUserData()
+            await useOrgStore.getState().updateOrgData()
+            set({ isLoaded: true })
+        } catch {
+            set({ isLoaded: true })
+        }
+
     },
     isLoaded: false,
     localConfig: undefined,

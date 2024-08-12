@@ -47,14 +47,14 @@ export const SignUp = () => {
     return (
         <Box sx={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
             <Box sx={{ width: '50%' }}>
-                <Typography variant='h2' sx={{ marginBottom: '2rem' }}>Sign Up</Typography>
+                <Typography variant='h2' sx={{ marginBottom: 4 }}>Sign Up</Typography>
                 <form onSubmit={handleSignUp}>
                     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                        <TextField label='Email' value={email} onChange={handleEmailChange} sx={{ marginBottom: '1rem' }} />
-                        <TextField label='Password' type='password' value={password} onChange={handlePasswordChange} sx={{ marginBottom: '1rem' }} />
+                        <TextField label='Email' value={email} onChange={handleEmailChange} sx={{ marginBottom: 2 }} />
+                        <TextField label='Password' type='password' value={password} onChange={handlePasswordChange} sx={{ marginBottom: 2 }} />
                         <TextField label='Verify Password' type='password' value={verifyPassword} onChange={handleVerifyPasswordChange} />
                     </Box>
-                    <Button variant='contained' disabled={isSigningUp} onClick={handleSignUp} sx={{ marginTop: '2rem' }}>Sign Up</Button>
+                    <Button variant='contained' disabled={isSigningUp} onClick={handleSignUp} sx={{ marginTop: 4 }}>Sign Up</Button>
                 </form>
             </Box>
         </Box>
